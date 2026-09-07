@@ -61,6 +61,21 @@ cd WhimprFlow && cd ui && pnpm install && cd ..
 ./dev.sh
 ```
 
+On Windows, from a PowerShell prompt:
+
+```powershell
+# prerequisites: rust (stable), node, pnpm, Visual Studio Build Tools (Desktop
+# development with C++), and LLVM/clang ≤ 18.x (not "latest" — see
+# docs/BUILD-PREREQUISITES.md)
+git clone https://github.com/nitrimandylis/WhimprFlow.git
+cd WhimprFlow && cd ui && pnpm install && cd ..
+.\dev.ps1
+```
+
+`dev.ps1` locates the MSVC environment automatically via vswhere, runs the
+LLVM/clang preflight check, builds and stages the LLM worker, then starts the
+app with hot reload. Models live in `%APPDATA%\WhimprFlow\models\`.
+
 First launch walks you through Accessibility and Microphone permissions, then lets you pick and download a Whisper model from inside the app. The `ggml-large-v3-turbo` (1.6 GB) is the sweet spot for Apple Silicon. You can also drop a `.bin` into `~/Library/Application Support/WhimprFlow/models/` manually. See [docs/MODELS.md](docs/MODELS.md) for download links.
 
 Grant both permissions, hold Fn, talk.
