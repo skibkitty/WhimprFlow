@@ -1324,7 +1324,14 @@ pub fn run() {
                 .and_then(|p| tauri::image::Image::from_path(p).ok())
                 .or_else(|| app.default_window_icon().cloned());
             if let Some(icon) = tray_icon {
-                tray = tray.icon(icon).icon_as_template(true);
+                #[cfg(target_os = "macos")]
+                {
+                    tray = tray.icon(icon).icon_as_template(true);
+                }
+                #[cfg(not(target_os = "macos"))]
+                {
+                    tray = tray.icon(icon);
+                }
             }
             tray.build(app)?;
 
