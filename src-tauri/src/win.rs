@@ -253,11 +253,22 @@ pub fn paste_text(text: &str) -> anyhow::Result<()> {
 
 // ── Cleanup (shared, cross-platform building blocks) ────────────────────────────
 
+/// Windows only implements Right Control as the push-to-talk key (see
+/// `PTT_VK`). Force the setting so the UI never advertises a macOS-only key
+/// (Fn / Globe, Right ⌘, Right ⌥) that the hook would ignore, and so every
+/// reader sees the key the hook actually responds to.
+fn normalize_ptt(mut s: whimpr_core::Settings) -> whimpr_core::Settings {
+    s.push_to_talk_key = whimpr_core::PushToTalkKey::RightControl;
+    s
+}
+
 fn current_settings_inner() -> whimpr_core::Settings {
-    SETTINGS
-        .get()
-        .map(|m| m.lock().unwrap().clone())
-        .unwrap_or_default()
+    normalize_ptt(
+        SETTINGS
+            .get()
+            .map(|m| m.lock().unwrap().clone())
+            .unwrap_or_default(),
+    )
 }
 
 fn clean_transcript(raw: &str) -> String {
@@ -490,6 +501,7 @@ pub fn current_settings() -> whimpr_core::Settings {
 }
 
 pub fn update_settings(new: whimpr_core::Settings) {
+    let new = normalize_ptt(new);
     if let Some(m) = SETTINGS.get() {
         *m.lock().unwrap() = new.clone();
     }
