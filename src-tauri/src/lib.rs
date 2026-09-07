@@ -786,6 +786,14 @@ fn get_build_info() -> BuildInfoDto {
     }
 }
 
+/// Which OS WhimprFlow is running on ("macos", "windows", "linux", …), so the
+/// UI can hide macOS-only concepts — fn/Globe and ⌘ symbols, System Settings
+/// copy — on Windows. Mirrors the `Platform` type in ui/src/platform.ts.
+#[tauri::command]
+fn get_platform() -> String {
+    std::env::consts::OS.to_string()
+}
+
 /// Copy arbitrary text to the system clipboard, for the Hub's history "Copy"
 /// button. Note this is a plain set — unlike `paste::paste_text`, which restores
 /// the previous clipboard afterwards, here the user explicitly asked for the
@@ -1198,6 +1206,7 @@ pub fn run() {
     builder
         .invoke_handler(tauri::generate_handler![
             get_settings,
+            get_platform,
             set_settings,
             get_stats,
             get_history,
