@@ -63,7 +63,15 @@ cd WhimprFlow && cd ui && pnpm install && cd ..
 ./dev.sh
 ```
 
-On Windows, from a PowerShell prompt:
+First launch walks you through Accessibility and Microphone permissions, then lets you pick and download a Whisper model from inside the app. The `ggml-large-v3-turbo` (1.6 GB) is the sweet spot for Apple Silicon. You can also drop a `.bin` into `~/Library/Application Support/WhimprFlow/models/` manually. See [docs/MODELS.md](docs/MODELS.md) for download links.
+
+Grant both permissions, hold Fn, talk.
+
+If double-tapping Fn opens Apple's own Dictation instead of locking a hands-free session, turn that shortcut off: System Settings → Keyboard → Dictation → Shortcut → Off, and set "Press 🌐 key to" → Do Nothing.
+
+### Windows
+
+Build from source (Windows runs from the dev harness until installers are cut):
 
 ```powershell
 # prerequisites: rust (stable), node, pnpm, Visual Studio Build Tools (Desktop
@@ -77,32 +85,6 @@ cd WhimprFlow && cd ui && pnpm install && cd ..
 `dev.ps1` locates the MSVC environment automatically via vswhere, runs the
 LLVM/clang preflight check, builds and stages the LLM worker, then starts the
 app with hot reload. Models live in `%APPDATA%\WhimprFlow\models\`.
-
-First launch walks you through Accessibility and Microphone permissions, then lets you pick and download a Whisper model from inside the app. The `ggml-large-v3-turbo` (1.6 GB) is the sweet spot for Apple Silicon. You can also drop a `.bin` into `~/Library/Application Support/WhimprFlow/models/` manually. See [docs/MODELS.md](docs/MODELS.md) for download links.
-
-Grant both permissions, hold Fn, talk.
-
-If double-tapping Fn opens Apple's own Dictation instead of locking a hands-free session, turn that shortcut off: System Settings → Keyboard → Dictation → Shortcut → Off, and set "Press 🌐 key to" → Do Nothing.
-
-### Windows
-
-Grab the installer from the [latest release](https://github.com/nitrimandylis/WhimprFlow/releases/latest). Windows builds ship as an MSI/NSIS installer — no special launch steps required.
-
-Or build from source:
-
-```powershell
-# prerequisites: rust (stable), node, pnpm, cmake, Visual Studio Build Tools (MSVC C++ workload)
-git clone https://github.com/nitrimandylis/WhimprFlow.git
-cd WhimprFlow
-cd ui; pnpm install; cd ..
-
-# dev.sh equivalent: build and stage the local-LLM worker, then launch the app
-# (tauri dev only builds the app crate, so the sidecar must be staged manually)
-$triple = (rustc -vV | Select-String '^host: ').Line -replace '^host: ', ''
-cargo build -p whimpr-llm-worker
-Copy-Item "target\debug\whimpr-llm-worker.exe" "src-tauri\binaries\whimpr-llm-worker-$triple.exe" -Force
-ui\node_modules\.bin\tauri dev
-```
 
 First launch walks you through microphone permission — in Settings → Privacy & security → Microphone, make sure "Allow desktop apps to access your microphone" is on — then lets you pick and download a Whisper model from inside the app. The `ggml-large-v3-turbo` (1.6 GB) is the sweet spot; on machines without NVIDIA hardware, try `ggml-base` or `ggml-small` for faster CPU transcription. You can also drop a `.bin` into `%APPDATA%\WhimprFlow\models\` manually. See [docs/MODELS.md](docs/MODELS.md) for download links.
 
