@@ -90,12 +90,17 @@ First launch walks you through microphone permission — in Settings → Privacy
 
 Grant the permission, hold Right Ctrl, talk.
 
-### Where things live
+### Platform differences
 
-| | macOS | Windows |
+| aspect | macOS | Windows |
 |---|---|---|
+| push-to-talk | configurable: Fn (Globe), Right ⌘, Right ⌥, Right ⌃ | Right Control (pinned — the hook only implements this one) |
+| hotkey modifier | `⌘` (Command) | `Win` key |
+| permissions | Accessibility + Microphone | Microphone (privacy setting) |
+| on-device ASR | whisper.cpp on Metal (Apple Silicon) | whisper.cpp CUDA (NVIDIA) or CPU |
 | settings, dictionary, stats, history | `~/Library/Application Support/WhimprFlow/` | `%APPDATA%\WhimprFlow\` |
 | API keys | macOS keychain | Windows Credential Manager |
+| suggested model | `ggml-large-v3-turbo` | `ggml-large-v3-turbo` (NVIDIA GPU), else `ggml-base` / `ggml-small` for CPU |
 
 The text of your last 500 dictations is kept on disk for the Hub's history list; turn that off in Settings → History if you would rather keep only the word counts. API keys never touch a file.
 
